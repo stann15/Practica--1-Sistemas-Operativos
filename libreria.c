@@ -14,18 +14,13 @@ int head(int N){
     while (lines < N && fgets(buffer,SIZE,stdin) !=0 ){
         fputs(buffer,stdout);
         lines=lines+1;
-
     }
-    
     if (ferror(stdin)) {
         fprintf(stderr, "...");
         return -1;
     }
-
     return 0;
 }
-
-
 
 int tail (int N){
     char** lineas;
@@ -44,7 +39,6 @@ int tail (int N){
         fprintf(stderr,"Error de memoria: %s\n",strerror(errno));
         return -1;
     }
-    
     while(fgets(buffer,SIZE,stdin)!=NULL){ //leemos la entrada y guardamos las N ultimas
         pos=contador % N;
         free(lineas[pos]); //liberamos la linea antigua
@@ -83,9 +77,7 @@ int tail (int N){
     }
     free(lineas);
     return 0;
-
 }
-
 
 int longlines(int N){
     int count=0;
