@@ -87,111 +87,117 @@ int tail (int N){
 }
 
 
-int longlines(int N){
-    int count=0;
-    int i=0;
-    int j=0;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include "libreria.h"
+
+int longlines(int N)
+{
+    // es un registro para guardar el texto y la longitud de cada linea
+    typedef struct {
+        char *texto;
+        size_t longitud;
+    } Tlinea;
+    int count = 0;
+    int i;
+    int j;
+    int min;
+    int max;
     char buffer[SIZE];
-    char** lines= NULL;
-    size_t* lineslength= NULL;
+    Tlinea *lines;// crea la variable, es un array de registros
+    Tlinea aux;// número de carácteres de la línea 
     size_t len;
-    char* aux;
-    size_t auxlen;
-    int min=0;
-    int max=0;
 
-    if (N<=0){
-        fprintf(stderr,"N no puede ser 0 o menos\n");
+    if (N <= 0) {//comprobamos que N sea mas que 0, para hacer calloc
+        fprintf(stderr, "N no puede ser 0 ni menor\n");
         return -1;
     }
-
-    lines=(char**) calloc(N,sizeof(char*));
-    if (lines==NULL){
-        fprintf(stderr,"Error de memoria: %s\n",strerror(errno));
+    //convertimos el puntero de memoria dinámica que hemos asignado a el puntero Tlinea 
+    lines = (Tlinea *) calloc(N, sizeof(Tlinea));
+    if (lines == 0) {//confirmamos que se ha reservado correctamente, si no se sale del programa con un return
+        fprintf(stderr, " No ha se podido reservar memoria\n");
         return -1;
     }
-    lineslength=(size_t*) calloc(N,sizeof(size_t));
-    if (lineslength==NULL){
-        fprintf(stderr,"Error de memoria: %s\n",strerror(errno));
-        free(lines);
-        return -1;
-    }
-
-    while(fgets(buffer,SIZE,stdin)!=NULL){
-        len=strlen(buffer);
-
-        if (count<N){ //hay hueco libre: se guarda directamente
-            lines[count]=strdup(buffer);
-            if (lines[count]==NULL){
-                fprintf(stderr,"Error de memoria: %s\n",strerror(errno));
-                for(i=0;i<count;i++){
-                    free(lines[i]);
+    //recibe todas las lineas y cuenta la longitud de los carácteres 
+    while (fgets(buffer, SIZE, stdin) != 0) {
+        len = strlen(buffer);//cuenta los carácteres de la línea que hemos recibido por medio de fgets 
+        if (len > 0 && buffer[len - 1] == '\n') {
+            buffer[len - 1] = '\0';
+            len=len-1;
+        }//comprobación de que 
+        if (count < N) {
+            lines[count].texto = (char*) malloc(strlen(buffer) + 1);
+            if (lines[count].texto == 0) {
+                fprintf(stderr, "Ha habido un error de memoria\n");
+                for (i = 0; i < count; i++) {
+                    free(lines[i].texto);
                 }
                 free(lines);
-                free(lineslength);
                 return -1;
             }
-            lineslength[count]=len;
-            count++;
+            strcpy(lines[count].texto, buffer);
+            lines[count].longitud = len;
+            count=count+1;
         }
-        else{ 
-            min=0;
-            for(i=1;i<N;i++){
-                if (lineslength[i]<lineslength[min]){
-                    min=i;
+        else {
+            min = 0;
+            for (i = 1; i < N; i++) {
+                if (lines[i].longitud < lines[min].longitud) {
+                    min = i;
                 }
             }
-            if (len>lineslength[min]){ 
-                free(lines[min]);
-                lines[min]=strdup(buffer);
-                if (lines[min]==NULL){
-                    fprintf(stderr,"Error de memoria: %s\n",strerror(errno));
-                    for(i=0;i<count;i++){
-                        free(lines[i]);
+            if (len > lines[min].longitud) {
+                free(lines[min].texto);
+                lines[min].texto = (char *) malloc(strlen(buffer) + 1);
+                if (lines[min].texto == NULL) {
+                    fprintf(stderr, "Error de memoria: %s\n", strerror(errno));
+                    for (i = 0; i < count; i++) {
+                        free(lines[i].texto);
                     }
                     free(lines);
-                    free(lineslength);
                     return -1;
                 }
-                lineslength[min]=len;
+                strcpy(lines[min].texto, buffer);
+                lines[min].longitud = len;
             }
         }
     }
 
-    if (ferror(stdin)){
-        fprintf(stderr,"Error de lectura: %s\n",strerror(errno));
-        for(i=0;i<count;i++){
-            free(lines[i]);
+    if (ferror(stdin)) {
+        fprintf(stderr, "Error de lectura: %s\n", strerror(errno));
+        for (i = 0; i < count; i++) {
+            free(lines[i].texto);
         }
         free(lines);
-        free(lineslength);
         return -1;
     }
 
-    for(i=0;i<count-1;i++){
-        max=i;
-        for(j=i+1;j<count;j++){
-            if (lineslength[j]>lineslength[max]){
-                max=j;
+    for (i = 0; i < count - 1; i++) {
+        max = i;
+        for (j = i + 1; j < count; j++) {
+            if (lines[j].longitud > lines[max].longitud) {
+                max = j;
             }
         }
-        aux=lines[i];
-        lines[i]=lines[max];
-        lines[max]=aux;
-        auxlen=lineslength[i];
-        lineslength[i]=lineslength[max];
-        lineslength[max]=auxlen;
+        if (max != i) {
+            aux = lines[i];
+            lines[i] = lines[max];
+            lines[max] = aux;
+        }
     }
 
-    for(i=0;i<count;i++){
-        fputs(lines[i],stdout);
+    for (i = 0; i < count; i++) {
+        fputs(lines[i].texto, stdout);
+            fputc('\n', stdout);
+        
     }
 
-    for(i=0;i<count;i++){
-        free(lines[i]);
+    for (i = 0; i < count; i++) {
+        free(lines[i].texto);
     }
     free(lines);
-    free(lineslength);
     return 0;
 }
        
