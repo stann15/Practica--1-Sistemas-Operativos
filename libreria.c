@@ -8,11 +8,11 @@
 #define SIZE 1024
 
 int head(int N){
-    char line[SIZE]; 
+    char buffer[SIZE]; 
     int lines=0;
 
-    while (lines < N && fgets(line,SIZE,stdin) !=0 ){
-        fputs(line,stdout);
+    while (lines < N && fgets(buffer,SIZE,stdin) !=0 ){
+        fputs(buffer,stdout);
         lines=lines+1;
 
     }
@@ -30,7 +30,7 @@ int head(int N){
 int tail (int N){
     char** lineas;
     char buffer[SIZE];
-    int contador;
+    int contador=0;
     int pos;
     int i;
     int ini;
@@ -44,7 +44,7 @@ int tail (int N){
         fprintf(stderr,"Error de memoria: %s\n",strerror(errno));
         return -1;
     }
-    contador=0;
+    
     while(fgets(buffer,SIZE,stdin)!=NULL){ //leemos la entrada y guardamos las N ultimas
         pos=contador % N;
         free(lineas[pos]); //liberamos la linea antigua
@@ -57,7 +57,7 @@ int tail (int N){
             free(lineas);
             return -1;
         }
-        contador++;
+        contador=contador+1;
     }
     if(ferror(stdin)){ //comprobamos si el while acabo por un error de lectura
         fprintf(stderr,"Error de lectura: %s\n",strerror(errno));
@@ -86,5 +86,113 @@ int tail (int N){
 
 }
 
-        
+
+int longlines(int N){
+    int count=0;
+    int i=0;
+    int j=0;
+    char buffer[SIZE];
+    char** lines= NULL;
+    size_t* lineslength= NULL;
+    size_t len;
+    char* aux;
+    size_t auxlen;
+    int min=0;
+    int max=0;
+
+    if (N<=0){
+        fprintf(stderr,"N no puede ser 0 o menos\n");
+        return -1;
+    }
+
+    lines=(char**) calloc(N,sizeof(char*));
+    if (lines==NULL){
+        fprintf(stderr,"Error de memoria: %s\n",strerror(errno));
+        return -1;
+    }
+    lineslength=(size_t*) calloc(N,sizeof(size_t));
+    if (lineslength==NULL){
+        fprintf(stderr,"Error de memoria: %s\n",strerror(errno));
+        free(lines);
+        return -1;
+    }
+
+    /* Leer todas las lineas y quedarnos con las N mas largas */
+    while(fgets(buffer,SIZE,stdin)!=NULL){
+        len=strlen(buffer);
+
+        if (count<N){ //hay hueco libre: se guarda directamente
+            lines[count]=strdup(buffer);
+            if (lines[count]==NULL){
+                fprintf(stderr,"Error de memoria: %s\n",strerror(errno));
+                for(i=0;i<count;i++){
+                    free(lines[i]);
+                }
+                free(lines);
+                free(lineslength);
+                return -1;
+            }
+            lineslength[count]=len;
+            count++;
+        }
+        else{ 
+            min=0;
+            for(i=1;i<N;i++){
+                if (lineslength[i]<lineslength[min]){
+                    min=i;
+                }
+            }
+            if (len>lineslength[min]){ 
+                free(lines[min]);
+                lines[min]=strdup(buffer);
+                if (lines[min]==NULL){
+                    fprintf(stderr,"Error de memoria: %s\n",strerror(errno));
+                    for(i=0;i<count;i++){
+                        free(lines[i]);
+                    }
+                    free(lines);
+                    free(lineslength);
+                    return -1;
+                }
+                lineslength[min]=len;
+            }
+        }
+    }
+
+    if (ferror(stdin)){
+        fprintf(stderr,"Error de lectura: %s\n",strerror(errno));
+        for(i=0;i<count;i++){
+            free(lines[i]);
+        }
+        free(lines);
+        free(lineslength);
+        return -1;
+    }
+
+    for(i=0;i<count-1;i++){
+        max=i;
+        for(j=i+1;j<count;j++){
+            if (lineslength[j]>lineslength[max]){
+                max=j;
+            }
+        }
+        aux=lines[i];
+        lines[i]=lines[max];
+        lines[max]=aux;
+        auxlen=lineslength[i];
+        lineslength[i]=lineslength[max];
+        lineslength[max]=auxlen;
+    }
+
+    for(i=0;i<count;i++){
+        fputs(lines[i],stdout);
+    }
+
+    for(i=0;i<count;i++){
+        free(lines[i]);
+    }
+    free(lines);
+    free(lineslength);
+    return 0;
+}
        
