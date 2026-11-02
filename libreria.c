@@ -117,7 +117,6 @@ int longlines(int N){
         return -1;
     }
 
-    /* Leer todas las lineas y quedarnos con las N mas largas */
     while(fgets(buffer,SIZE,stdin)!=NULL){
         len=strlen(buffer);
 

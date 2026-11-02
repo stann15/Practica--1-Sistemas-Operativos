@@ -8,6 +8,6 @@ ar -rv liblibreria.a libreria.o
 
 gcc -Wall -Wextra test.c -L. -llibreria -o test
 
-echo "Compilacion correcta: generados liblibreria.a y test"
+echo "Se ha compilado correctamente"
 
 
