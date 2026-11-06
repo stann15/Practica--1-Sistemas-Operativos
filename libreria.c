@@ -79,12 +79,6 @@ int tail (int N){
     return 0;
 }
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-#include "libreria.h"
-
 int longlines(int N)
 {
     // es un registro para guardar el texto y la longitud de cada linea
