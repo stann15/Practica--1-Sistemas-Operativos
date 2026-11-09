@@ -10,13 +10,17 @@
 int head(int N){
     char buffer[SIZE]; 
     int lines=0;
-
-    while (lines < N && fgets(buffer,SIZE,stdin) !=0 ){
+    
+    if (N<=0){
+        fprintf(stderr,"N debe ser mayor que 0\n");
+        return -1;
+    }
+    while (lines < N && fgets(buffer,SIZE,stdin)!=NULL){
         fputs(buffer,stdout);
         lines=lines+1;
     }
     if (ferror(stdin)) {
-        fprintf(stderr, "...");
+        fprintf(stderr,"Error de lectura: %s\n",strerror(errno));
         return -1;
     }
     return 0;
@@ -61,6 +65,7 @@ int tail (int N){
         free(lineas);
         return -1;
     }
+    // ha acabado pq no hay mas lineas
     if(contador<N){ //hay menos lineas que las pedidas
         for(i=0;i<contador;i++){
             fputs(lineas[i],stdout);
