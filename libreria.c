@@ -9,15 +9,15 @@
 
 int head(int N){
     char buffer[SIZE]; 
-    int lines = 0;
+    int lineas = 0;
     
     if (N<=0){
         fprintf(stderr,"N debe ser mayor que 0");
         return -1;
     }
-    while (lines < N && fgets(buffer,SIZE,stdin) != NULL){
+    while (lineas < N && fgets(buffer,SIZE,stdin) != NULL){
         fputs(buffer,stdout);
-        lines = lines + 1;
+        lineas = lineas + 1;
     }
     if (ferror(stdin)) {
         fprintf(stderr,"Error de lectura: %s",strerror(errno));
@@ -90,13 +90,13 @@ int longlines(int N){
         char *texto;
         size_t longitud;
     } Tlinea;
-    int count = 0;
+    int contador = 0;
     int i;
     int j;
     int min;
     int max;
     char buffer[SIZE];
-    Tlinea *lines;// crea la variable, es un array de registros
+    Tlinea *lineas;// crea la variable, es un array de registros
     Tlinea aux;// número de carácteres de la línea 
     size_t len;
 
@@ -105,8 +105,8 @@ int longlines(int N){
         return -1;
     }
     //convertimos el puntero de memoria dinámica que hemos asignado a el puntero Tlinea 
-    lines = (Tlinea *) calloc(N,sizeof(Tlinea));
-    if (lines == 0){//confirmamos que se ha reservado correctamente, si no se sale del programa con un return
+    lineas = (Tlinea *) calloc(N,sizeof(Tlinea));
+    if (lineas == 0){//confirmamos que se ha reservado correctamente, si no se sale del programa con un return
         fprintf(stderr,"No se ha podido reservar memoria: %s",strerror(errno));
         return -1;
     }
@@ -117,71 +117,71 @@ int longlines(int N){
             buffer[len - 1]='\0';
             len=len - 1;
         }//comprobación de que 
-        if (count < N) {
-            lines[count].texto = (char*) malloc(strlen(buffer) + 1);
-            if (lines[count].texto == NULL){
+        if (contador < N) {
+            lineas[contador].texto = (char*) malloc(strlen(buffer) + 1);
+            if (lineas[contador].texto == NULL){
                 fprintf(stderr,"Ha habido un error de memoria");
-                for(i = 0;i < count;i++){
-                    free(lines[i].texto);
+                for(i = 0;i < contador;i++){
+                    free(lineas[i].texto);
                 }
-                free(lines);
+                free(lineas);
                 return -1;
             }
-            strcpy(lines[count].texto,buffer);
-            lines[count].longitud = len;
-            count = count + 1;
+            strcpy(lineas[contador].texto,buffer);
+            lineas[contador].longitud = len;
+            contador = contador + 1;
         }
         else{
             min = 0;
             for(i = 1;i < N;i++){
-                if(lines[i].longitud < lines[min].longitud){
+                if(lineas[i].longitud < lineas[min].longitud){
                     min= i;
                 }
             }
-            if (len > lines[min].longitud){
-                free(lines[min].texto);
-                lines[min].texto = (char *) malloc(strlen(buffer) + 1);
-                if (lines[min].texto == NULL){
+            if (len > lineas[min].longitud){
+                free(lineas[min].texto);
+                lineas[min].texto = (char *) malloc(strlen(buffer) + 1);
+                if (lineas[min].texto == NULL){
                     fprintf(stderr, "Error de memoria: %s",strerror(errno));
-                    for (i=0;i<count;i++){
-                        free(lines[i].texto);
+                    for (i=0;i<contador;i++){
+                        free(lineas[i].texto);
                     }
-                    free(lines);
+                    free(lineas);
                     return -1;
                 }
-                strcpy(lines[min].texto,buffer);
-                lines[min].longitud = len;
+                strcpy(lineas[min].texto,buffer);
+                lineas[min].longitud = len;
             }
         }
     }
     if (ferror(stdin)){
         fprintf(stderr,"Error de lectura: %s",strerror(errno));
-        for(i = 0;i < count;i++){
-            free(lines[i].texto);
+        for(i = 0;i < contador;i++){
+            free(lineas[i].texto);
         }
-        free(lines);
+        free(lineas);
         return -1;
     }
-    for(i = 0;i < count - 1;i++){
+    for(i = 0;i < contador - 1;i++){
         max = i;
-        for (j = i + 1;j < count;j++){
-            if (lines[j].longitud > lines[max].longitud){
+        for (j = i + 1;j < contador;j++){
+            if (lineas[j].longitud > lineas[max].longitud){
                 max = j;
             }
         }
         if (max != i){
-            aux = lines[i];
-            lines[i] = lines[max];
-            lines[max] = aux;
+            aux = lineas[i];
+            lineas[i] = lineas[max];
+            lineas[max] = aux;
         }
     }
-    for(i = 0; i < count; i++){
-        fputs(lines[i].texto, stdout);
+    for(i = 0; i < contador; i++){
+        fputs(lineas[i].texto, stdout);
             fputc('\n', stdout);
     }
-    for (i = 0; i < count; i++){
-        free(lines[i].texto);
+    for (i = 0; i < contador; i++){
+        free(lineas[i].texto);
     }
-    free(lines);
+    free(lineas);
     return 0;
 }  
