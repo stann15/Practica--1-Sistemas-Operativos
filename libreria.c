@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "libreria.h"
+#include "libreria.h"// definimos "libreria.h" para que en test.c podamos usarlo
 
 #define SIZE 1024
 
