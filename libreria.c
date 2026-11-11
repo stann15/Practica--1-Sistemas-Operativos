@@ -87,7 +87,7 @@ int tail (int N){
 int longlines(int N){
     // es un registro para guardar el texto y la longitud de cada linea
     typedef struct{
-        char *texto;
+        char* texto;
         size_t longitud;
     } Tlinea;
     int contador = 0;
@@ -96,7 +96,7 @@ int longlines(int N){
     int min;
     int max;
     char buffer[SIZE];
-    Tlinea *lineas;// crea la variable, es un array de registros
+    Tlinea* lineas;// crea la variable, es un array de registros
     Tlinea aux;// número de carácteres de la línea 
     size_t len;
 
@@ -105,7 +105,7 @@ int longlines(int N){
         return -1;
     }
     //convertimos el puntero de memoria dinámica que hemos asignado a el puntero Tlinea 
-    lineas = (Tlinea *) calloc(N,sizeof(Tlinea));
+    lineas = (Tlinea*) calloc(N,sizeof(Tlinea));
     if (lineas == 0){//confirmamos que se ha reservado correctamente, si no se sale del programa con un return
         fprintf(stderr,"No se ha podido reservar memoria: %s",strerror(errno));
         return -1;
