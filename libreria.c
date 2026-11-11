@@ -4,26 +4,21 @@
 #include <string.h>
 #include <errno.h>
 #include "libreria.h"// definimos "libreria.h" para que en test.c podamos usarlo
+#define SIZE 1024// guardamos el tamaño asi para saberlo antes de compilar
 
-#define SIZE 1024
-
+//muestra las N primeras entradas
 int head(int N){
-    char buffer[SIZE]; 
-    int lineas = 0;
-    
-    if (N<=0){
-        fprintf(stderr,"N debe ser mayor que 0");
-        return -1;
-    }
-    while (lineas < N && fgets(buffer,SIZE,stdin) != NULL){
+    char buffer[SIZE];//donde guardamos la línea, como sons seguidas y no hay que hacer nada no se necesita memoria dinámica
+    int lineas = 0;//numero de líneas hasta ahora
+    while (lineas < N && fgets(buffer,SIZE,stdin) != NULL){// mientras no haya <N y haya entrada seguimos, escribimos la línea y sumamos 1
         fputs(buffer,stdout);
         lineas = lineas + 1;
     }
-    if (ferror(stdin)) {
+    if (ferror(stdin)) {// si ha devuelto NULL escribimos mensaje de error
         fprintf(stderr,"Error de lectura: %s",strerror(errno));
         return -1;
     }
-    return 0;
+    return 0;// todo ha ido bien 
 }
 
 int tail (int N){
@@ -99,11 +94,7 @@ int longlines(int N){
     Tlinea* lineas;// crea la variable, es un array de registros
     Tlinea aux;// número de carácteres de la línea 
     size_t len;
-
-    if (N <= 0){//comprobamos que N sea mas que 0, para hacer calloc
-        fprintf(stderr,"N debe ser mayor que 0");
-        return -1;
-    }
+    
     //convertimos el puntero de memoria dinámica que hemos asignado a el puntero Tlinea 
     lineas = (Tlinea*) calloc(N,sizeof(Tlinea));
     if (lineas == 0){//confirmamos que se ha reservado correctamente, si no se sale del programa con un return
