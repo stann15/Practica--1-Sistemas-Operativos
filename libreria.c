@@ -28,11 +28,6 @@ int tail (int N){
     int pos;
     int i;
     int ini;
-
-    if (N <= 0){
-        fprintf(stderr,"N debe ser mayor que 0");
-        return -1;
-    }
     lineas = (char**) calloc(N,sizeof(char*)); //reservamos la memoria para guardar las N lineas poniendolo a NULL
     if (lineas == NULL){
         fprintf(stderr,"No se ha podido reservar memoria: %s",strerror(errno));
