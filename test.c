@@ -7,7 +7,7 @@
 
 int main(int argc,char* argv[]){
     int N = 10;// el enunciado especifíca que en caso de no introducir valor a N, valga 10
-    int i=0;// con i recorremos lo que nos introduzca el usuario
+    int i = 0;// con i recorremos lo que nos introduzca el usuario
     int valor;// variable en la cual guardamos si ha ejecutado bien la función o no
 
     //Como indica las funciones tienes 1 o máximo 2(la función y N)
@@ -18,7 +18,7 @@ int main(int argc,char* argv[]){
     if(argc == 3){
         for(; argv[2][i] != '\0'; i++){//recorremos N viendo si es un numero, si no lo es manda por pantalla un mensaje de error
             if(argv[2][i] < '0' || argv[2][i] > '9'){
-                fprintf(stderr,"Lo que ha introducido no es un numero\n");
+                fprintf(stderr,"Lo que ha introducido no es un numero");
                 return 1;
             }
         }

@@ -95,6 +95,10 @@ int longlines(int N){
     Tlinea aux;// número de carácteres de la línea 
     size_t len;
     
+    if (N <= 0){
+        fprintf(stderr,"N debe ser mayor que 0");
+        return -1;
+    }
     //convertimos el puntero de memoria dinámica que hemos asignado a el puntero Tlinea 
     lineas = (Tlinea*) calloc(N,sizeof(Tlinea));
     if (lineas == 0){//confirmamos que se ha reservado correctamente, si no se sale del programa con un return
