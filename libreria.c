@@ -8,14 +8,19 @@
 
 //muestra las N primeras entradas
 int head(int N){
-    char buffer[SIZE];//donde guardamos la línea, como sons seguidas y no hay que hacer nada no se necesita memoria dinámica
+    char buffer[SIZE];//donde guardamos la línea, como son seguidas y no hay que hacer nada no se necesita memoria dinámica
     int lineas = 0;//numero de líneas hasta ahora
+
+    if (N <= 0){
+        fprintf(stderr,"N debe ser mayor que 0\n");
+        return -1;
+    }
     while (lineas < N && fgets(buffer,SIZE,stdin) != NULL){// mientras no haya <N y haya entrada seguimos, escribimos la línea y sumamos 1
         fputs(buffer,stdout);
         lineas = lineas + 1;
     }
     if (ferror(stdin)) {// si ha devuelto NULL escribimos mensaje de error
-        fprintf(stderr,"Error de lectura: %s",strerror(errno));
+        fprintf(stderr,"Error de lectura: %s\n",strerror(errno));
         return -1;
     }
     return 0;// todo ha ido bien 
@@ -28,9 +33,14 @@ int tail (int N){
     int pos;
     int i;
     int ini;
+
+    if (N <= 0){
+        fprintf(stderr,"N debe ser mayor que 0\n");
+        return -1;
+    }
     lineas = (char**) calloc(N,sizeof(char*)); //reservamos la memoria para guardar las N lineas poniendolo a NULL
     if (lineas == NULL){
-        fprintf(stderr,"No se ha podido reservar memoria: %s",strerror(errno));
+        fprintf(stderr,"No se ha podido reservar memoria: %s\n",strerror(errno));
         return -1;
     }
     while(fgets(buffer,SIZE,stdin) != NULL){ //leemos la entrada y guardamos las N ultimas
@@ -38,7 +48,7 @@ int tail (int N){
         free(lineas[pos]); //liberamos la linea antigua
         lineas[pos] = strdup(buffer); //copiamos la linea en memoria pq buffer cambia cada iteracion
         if(lineas[pos] == NULL){
-            fprintf(stderr,"Error de memoria: %s",strerror(errno));
+            fprintf(stderr,"Error de memoria: %s\n",strerror(errno));
             for(i = 0;i < N;i++){
                 free(lineas[i]);
             }
@@ -48,7 +58,7 @@ int tail (int N){
         contador = contador + 1;
     }
     if(ferror(stdin)){ //comprobamos si el while acabo por un error de lectura
-        fprintf(stderr,"Error de lectura: %s",strerror(errno));
+        fprintf(stderr,"Error de lectura: %s\n",strerror(errno));
         for(i = 0;i < N;i++){
             free(lineas[i]);
         }
@@ -97,7 +107,7 @@ int longlines(int N){
     //convertimos el puntero de memoria dinámica que hemos asignado a el puntero Tlinea 
     lineas = (Tlinea*) calloc(N,sizeof(Tlinea));
     if (lineas == 0){//confirmamos que se ha reservado correctamente, si no se sale del programa con un return
-        fprintf(stderr,"No se ha podido reservar memoria: %s",strerror(errno));
+        fprintf(stderr,"No se ha podido reservar memoria: %s\n",strerror(errno));
         return -1;
     }
     //recibe todas las lineas y cuenta la longitud de los carácteres 
@@ -110,7 +120,7 @@ int longlines(int N){
         if (contador < N) {
             lineas[contador].texto = (char*) malloc(strlen(buffer) + 1);
             if (lineas[contador].texto == NULL){
-                fprintf(stderr,"Ha habido un error de memoria");
+                fprintf(stderr,"Ha habido un error de memoria\n");
                 for(i = 0;i < contador;i++){
                     free(lineas[i].texto);
                 }
@@ -132,7 +142,7 @@ int longlines(int N){
                 free(lineas[min].texto);
                 lineas[min].texto = (char *) malloc(strlen(buffer) + 1);
                 if (lineas[min].texto == NULL){
-                    fprintf(stderr, "Error de memoria: %s",strerror(errno));
+                    fprintf(stderr, "Error de memoria: %s\n",strerror(errno));
                     for (i=0;i<contador;i++){
                         free(lineas[i].texto);
                     }
@@ -145,7 +155,7 @@ int longlines(int N){
         }
     }
     if (ferror(stdin)){
-        fprintf(stderr,"Error de lectura: %s",strerror(errno));
+        fprintf(stderr,"Error de lectura: %s\n",strerror(errno));
         for(i = 0;i < contador;i++){
             free(lineas[i].texto);
         }

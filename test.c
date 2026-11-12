@@ -18,7 +18,7 @@ int main(int argc,char* argv[]){
     if(argc == 3){
         for(; argv[2][i] != '\0'; i++){//recorremos N viendo si es un numero, si no lo es manda por pantalla un mensaje de error
             if(argv[2][i] < '0' || argv[2][i] > '9'){
-                fprintf(stderr,"Lo que ha introducido no es un numero");
+                fprintf(stderr,"Lo que ha introducido no es un numero\n");
                 return 1;
             }
         }
