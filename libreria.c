@@ -22,7 +22,7 @@ int head(int N){ //muestra las N primeras líneas
         fprintf(stderr,"Error de lectura: %s\n",strerror(errno));
         return -1;
     }
-    return 0;// todo ha ido bien 
+    return 0;
 }
 
 int tail (int N){ //muestra las N ultimas líneas
@@ -37,15 +37,15 @@ int tail (int N){ //muestra las N ultimas líneas
         fprintf(stderr,"N debe ser mayor que 0\n");
         return -1;
     }
-    lineas = (char**) calloc(N,sizeof(char*)); //reservamos la memoria para guardar las N lineas poniendolo a NULL
+    lineas = (char**) calloc(N,sizeof(char*)); //reservamos la memoria para guardar las N líneas poniendolo a NULL
     if (lineas == NULL){
         fprintf(stderr,"No se ha podido reservar memoria: %s\n",strerror(errno));
         return -1;
     }
-    while(fgets(buffer,SIZE,stdin) != NULL){ //leemos la entrada y guardamos las N ultimas
+    while(fgets(buffer,SIZE,stdin) != NULL){ //leemos la entrada y guardamos las N últimas
         pos = contador % N;
-        free(lineas[pos]); //liberamos la linea antigua
-        lineas[pos] = strdup(buffer); //copiamos la linea en memoria pq el buffer cambia cada iteracion
+        free(lineas[pos]); //liberamos la línea antigua
+        lineas[pos] = strdup(buffer); //copiamos la línea en memoria pq el buffer cambia cada iteración
         if(lineas[pos] == NULL){
             fprintf(stderr,"Error de memoria: %s\n",strerror(errno));
             for(i = 0;i < N;i++){//liberamos toda la memoria reservada
@@ -64,14 +64,14 @@ int tail (int N){ //muestra las N ultimas líneas
         free(lineas);
         return -1;
     }
-    // ha acabado pq no hay mas lineas
-    if(contador < N){ //hay menos lineas que las pedidas
+    // ha acabado pq no hay mas líneas
+    if(contador < N){ //hay menos líneas que las pedidas
         for(i = 0;i < contador;i++){
             fputs(lineas[i],stdout);
         }
     }
     else{
-        ini = contador % N; //la linea mas antigua esta aqui
+        ini = contador % N; //la linea más antigua está aqui
         for(i = 0;i < N;i++){
             fputs(lineas[(ini + i) % N],stdout);
         }
@@ -102,7 +102,7 @@ int longlines(int N){//muestra las N líneas más largas de mayor a menor longit
         fprintf(stderr,"N debe ser mayor que 0\n");
         return -1;
     }
-    //convertimos el puntero de memoria dinámica que hemos asignado a el puntero Tlinea 
+    //convertimos el puntero de memoria dinámica que hemos asignado al puntero Tlinea 
     lineas = (Tlinea*) calloc(N,sizeof(Tlinea));
     if (lineas == NULL){//confirmamos que se ha reservado correctamente, si no se sale de la función con un return
         fprintf(stderr,"No se ha podido reservar memoria: %s\n",strerror(errno));
@@ -116,7 +116,7 @@ int longlines(int N){//muestra las N líneas más largas de mayor a menor longit
             len=len - 1;
         }
         if (contador < N) {//todavia queda hueco para más líneas
-            lineas[contador].texto = (char*) malloc(strlen(buffer) + 1);//sumamos 1 pq strlen no cuenta "\0"
+            lineas[contador].texto = (char*) malloc(strlen(buffer) + 1);//sumamos 1 pq strlen no cuenta '\0'
             if (lineas[contador].texto == NULL){
                 fprintf(stderr, "Error de memoria: %s\n",strerror(errno));
                 for(i = 0;i < contador;i++){ //liberamos toda la memoria reservada
@@ -133,7 +133,7 @@ int longlines(int N){//muestra las N líneas más largas de mayor a menor longit
             min = 0;
             for(i = 1;i < N;i++){// buscamos la más corta
                 if(lineas[i].longitud < lineas[min].longitud){
-                    min= i;
+                    min = i;
                 }
             }
             if (len > lineas[min].longitud){//comprobamos si la nueva es más larga que la corta
@@ -141,7 +141,7 @@ int longlines(int N){//muestra las N líneas más largas de mayor a menor longit
                 lineas[min].texto = (char *) malloc(strlen(buffer) + 1);
                 if (lineas[min].texto == NULL){
                     fprintf(stderr, "Error de memoria: %s\n",strerror(errno));
-                    for (i=0;i<contador;i++){//liberamos toda la memoria reservada
+                    for (i = 0;i < contador; i++){//liberamos toda la memoria reservada
                         free(lineas[i].texto);
                     }
                     free(lineas);
@@ -176,7 +176,7 @@ int longlines(int N){//muestra las N líneas más largas de mayor a menor longit
     }
     for(i = 0; i < contador; i++){ //mostramos las líneas
         fputs(lineas[i].texto, stdout);
-            fputc('\n', stdout);
+            fputc('\n' , stdout);
     }
     for (i = 0; i < contador; i++){ //liberamos toda la memoria reservada
         free(lineas[i].texto);
