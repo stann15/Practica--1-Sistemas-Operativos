@@ -14,11 +14,11 @@ int main(int argc,char* argv[]){
     if (argc < 2 || argc > 3){
         fprintf(stderr,"Uso incorrecto: ./test\n");
         return 1;
-    }//queremos comprobar que el string que haya introducido el usuario es un número
-    if(argc == 3){
+    }
+    if(argc == 3){//queremos comprobar que el string que haya introducido el usuario es un número
         for(; argv[2][i] != '\0'; i++){//recorremos N viendo si es un numero, si no lo es manda por pantalla un mensaje de error
             if(argv[2][i] < '0' || argv[2][i] > '9'){
-                fprintf(stderr,"Lo que ha introducido no es un numero\n");
+                fprintf(stderr,"Lo que ha introducido no es un número\n");
                 return 1;
             }
         }
@@ -29,7 +29,7 @@ int main(int argc,char* argv[]){
         fprintf(stderr,"N debe ser mayor que 0\n");
         return 1;
     }
-    if(strcmp(argv[1],"-head") == 0){//busca con strcmp, el string que ha intoducido el usuario con que función concuerda. Con -tail
+    if(strcmp(argv[1],"-head") == 0){//busca con strcmp, el string que ha intoducido el usuario con que función concuerda. Con -head
         valor = head(N);//saber si ha ejecutado bien la función  
     }
     else if(strcmp(argv[1],"-tail") == 0){//con -tail 
@@ -42,7 +42,7 @@ int main(int argc,char* argv[]){
         fprintf(stderr,"No hay una función en la librería con ese nombre\n");//o con ninguna 
         return 1;
     }
-    if(valor<0){// si el valor devuelto por la función es <0(ha fallado), terminar el problema con error
+    if(valor<0){// si el valor devuelto por la función es <0(ha fallado), terminar el programa con error
         return 1;
     }
     return 0;
